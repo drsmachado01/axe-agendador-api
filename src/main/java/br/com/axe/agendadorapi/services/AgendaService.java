@@ -1,6 +1,5 @@
 package br.com.axe.agendadorapi.services;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import br.com.axe.agendadorapi.domain.model.Agenda;
@@ -8,7 +7,7 @@ import br.com.axe.agendadorapi.domain.model.Agenda;
 public interface AgendaService {
 	List<Agenda> list();
 	
-	List<Agenda> findByTheDate(LocalDate theDate);
+	List<Agenda> findByTheDate(Agenda agenda);
 	
 	Agenda findById(Long id);
 
