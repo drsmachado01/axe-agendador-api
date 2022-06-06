@@ -1,6 +1,7 @@
 package br.com.axe.agendadorapi.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -46,6 +47,8 @@ class AgendaServiceTest {
     private AgendaRepository repo;
 
     private Agenda agenda;
+    
+    private Agenda agenda2;
 
     private Optional<Agenda> optAgenda;
 
@@ -87,21 +90,27 @@ class AgendaServiceTest {
     
     @Test
     void testFindByTheDate() {
-    	when(repo.findByTheDate(THE_DATE)).thenReturn(List.of(agenda));
+    	when(repo.findByTheDateOrderByTheTimeAsc(THE_DATE)).thenReturn(List.of(agenda, agenda2));
 
     	Agenda agenda = Agenda.builder().theDate(THE_DATE).build();
     	List<Agenda> response = service.findByTheDate(agenda);
 
         assertNotNull(response);
-        assertEquals(1, response.size());
+        assertEquals(2, response.size());
         assertEquals(Agenda.class, response.get(0).getClass());
+        assertEquals(Agenda.class, response.get(1).getClass());
         Agenda expectedAgenda = response.get(0);
+        Agenda expectedAgenda2 = response.get(1);
         assertingAgendaData(expectedAgenda);
+        assertEquals(expectedAgenda.getTheDate(), expectedAgenda2.getTheDate());
+        assertNotEquals(expectedAgenda.getTheTime(), expectedAgenda2.getTheTime());
+        assertEquals(THE_TIME, expectedAgenda.getTheTime());
+        assertEquals(LocalTime.of(20, 0), expectedAgenda2.getTheTime());
     }
 
     @Test
     void testFindByTheDateWhenHasNoAgenda() {
-    	when(repo.findByTheDate(THE_DATE)).thenReturn(List.of());
+    	when(repo.findByTheDateOrderByTheTimeAsc(THE_DATE)).thenReturn(List.of());
     	Agenda agenda = Agenda.builder().theDate(THE_DATE).build();
     	List<Agenda> response = service.findByTheDate(agenda);
 
@@ -222,6 +231,11 @@ class AgendaServiceTest {
                 .theTime(THE_TIME)
                 .retorno(RETURNING)
                 .theClientName(THE_CLIENT_NAME).build();
+        
+        agenda2 = Agenda.builder().idAgenda(2L).theDate(THE_DATE)
+                .theTime(LocalTime.of(20, 0))
+                .retorno(RETURNING)
+                .theClientName("João Goméia").build();
 
         optAgenda = Optional.of(Agenda.builder().idAgenda(ID_AGENDA).theDate(THE_DATE)
                 .theTime(THE_TIME)
