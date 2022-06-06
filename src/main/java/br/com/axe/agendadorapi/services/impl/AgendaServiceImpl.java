@@ -24,7 +24,7 @@ public class AgendaServiceImpl implements AgendaService {
 
 	@Override
 	public List<Agenda> findByTheDate(Agenda agenda) {
-		return repo.findByTheDate(agenda.getTheDate());
+		return repo.findByTheDateOrderByTheTimeAsc(agenda.getTheDate());
 	}
 
 	@Override

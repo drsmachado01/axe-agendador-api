@@ -12,7 +12,7 @@ import br.com.axe.agendadorapi.domain.model.Agenda;
 
 @Repository
 public interface AgendaRepository extends JpaRepository<Agenda, Long> {
-	public List<Agenda> findByTheDate(LocalDate theDate);
+	public List<Agenda> findByTheDateOrderByTheTimeAsc(LocalDate theDate);
 	
 	public Optional<Agenda> findByTheDateAndTheTime(LocalDate theDate, LocalTime theTime);
 }
