@@ -1,10 +1,18 @@
 package br.com.axe.agendadorapi.services;
 
-import br.com.axe.agendadorapi.domain.model.Agenda;
-import br.com.axe.agendadorapi.repositories.AgendaRepository;
-import br.com.axe.agendadorapi.services.exceptions.DataIntegrityViolationException;
-import br.com.axe.agendadorapi.services.exceptions.ObjectNotFoundException;
-import br.com.axe.agendadorapi.services.impl.AgendaServiceImpl;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,20 +20,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.times;
+import br.com.axe.agendadorapi.domain.model.Agenda;
+import br.com.axe.agendadorapi.repositories.AgendaRepository;
+import br.com.axe.agendadorapi.services.exceptions.DataIntegrityViolationException;
+import br.com.axe.agendadorapi.services.exceptions.ObjectNotFoundException;
+import br.com.axe.agendadorapi.services.impl.AgendaServiceImpl;
 
 @SpringBootTest
+@TestPropertySource(locations="classpath:application.properties")
 class AgendaServiceTest {
     public static final LocalDate THE_DATE = LocalDate.of(2022, 06, 06);
     public static final LocalTime THE_TIME = LocalTime.of(18, 0);
@@ -84,8 +88,9 @@ class AgendaServiceTest {
     @Test
     void testFindByTheDate() {
     	when(repo.findByTheDate(THE_DATE)).thenReturn(List.of(agenda));
-    	
-    	List<Agenda> response = service.findByTheDate(THE_DATE);
+
+    	Agenda agenda = Agenda.builder().theDate(THE_DATE).build();
+    	List<Agenda> response = service.findByTheDate(agenda);
 
         assertNotNull(response);
         assertEquals(1, response.size());
@@ -97,8 +102,8 @@ class AgendaServiceTest {
     @Test
     void testFindByTheDateWhenHasNoAgenda() {
     	when(repo.findByTheDate(THE_DATE)).thenReturn(List.of());
-    	
-    	List<Agenda> response = service.findByTheDate(THE_DATE);
+    	Agenda agenda = Agenda.builder().theDate(THE_DATE).build();
+    	List<Agenda> response = service.findByTheDate(agenda);
 
         assertNotNull(response);
         assertEquals(0, response.size());

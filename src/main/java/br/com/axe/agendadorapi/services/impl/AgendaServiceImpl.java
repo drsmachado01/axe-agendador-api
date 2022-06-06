@@ -1,6 +1,5 @@
 package br.com.axe.agendadorapi.services.impl;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +23,8 @@ public class AgendaServiceImpl implements AgendaService {
 	}
 
 	@Override
-	public List<Agenda> findByTheDate(LocalDate theDate) {
-		return repo.findByTheDate(theDate);
+	public List<Agenda> findByTheDate(Agenda agenda) {
+		return repo.findByTheDate(agenda.getTheDate());
 	}
 
 	@Override

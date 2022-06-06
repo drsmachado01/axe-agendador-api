@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -43,6 +43,12 @@ public class AgendaController {
 	@GetMapping(ID)
 	public ResponseEntity<AgendaDTO> findById(@PathVariable Long id) {
 		return ResponseEntity.ok().body(mapper.map(service.findById(id), AgendaDTO.class));
+	}
+	
+	@GetMapping("/date/{theDate}")
+	public ResponseEntity<List<AgendaDTO>> listAgendaOfSpecificDate(@PathVariable LocalDate theDate) {
+		Agenda agenda = Agenda.builder().theDate(theDate).build();
+		return ResponseEntity.ok().body(service.findByTheDate(agenda).stream().map(a -> mapper.map(a, AgendaDTO.class)).collect(Collectors.toList()));
 	}
 	
 	@GetMapping("/{theDate}/{theTime}")
