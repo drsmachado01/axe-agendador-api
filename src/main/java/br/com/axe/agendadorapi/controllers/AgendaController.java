@@ -46,7 +46,7 @@ public class AgendaController {
 	}
 	
 	@GetMapping("/date/{theDate}")
-	public ResponseEntity<List<AgendaDTO>> listAgendaOfSpecificDate(@PathVariable LocalDate theDate) {
+	public ResponseEntity<List<AgendaDTO>> listAgendaOfSpecificDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate theDate) {
 		Agenda agenda = Agenda.builder().theDate(theDate).build();
 		return ResponseEntity.ok().body(service.findByTheDate(agenda).stream().map(a -> mapper.map(a, AgendaDTO.class)).collect(Collectors.toList()));
 	}
